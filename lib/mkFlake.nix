@@ -82,14 +82,16 @@ flake-parts.lib.mkFlake { inherit inputs; } {
           # either host gets automatically determined or it's explicitly set
           { inherit (normalized) nut; }
         ]
-        ++ {
-          # I don't think you would ever not want flakes enabled with this type
-          # of configuration so just enable them by default
-          nix.settings.experimental-features = [
-            "flakes"
-            "nix-command"
-          ];
-        }
+        ++ [
+          {
+            # I don't think you would ever not want flakes enabled with this type
+            # of configuration so just enable them by default
+            nix.settings.experimental-features = [
+              "flakes"
+              "nix-command"
+            ];
+          }
+        ]
         ++ (mkDefaultModules name)
         ++ modules
         ++ (normalized.modules or [ ])
