@@ -1,0 +1,5 @@
+{
+  "nixpkgs": {
+    "expr": "import (builtins.getFlake \".\").inputs.nixpkgs {}"
+  }
+}
