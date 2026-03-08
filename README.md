@@ -178,6 +178,11 @@ A user and its home folder is also automatically created for each `hmModules`
 entry with sensible defaults. As with everything you can override these
 defaults, explained in the [dedicated section](#overriding-defaults) .
 
+User passwords are unset by default so make sure you will still have access to
+either your user or root after deployment to set the password with `passwd`.
+Alternatively, you can set `users.users.myuser.initialPassword = changeme;` or
+something to that effect, which will be ignored after you set a password.
+
 The home manager modules are merged with each machine's modules. There is no
 `homeConfigurations` . iF you wish to do things differently, you can simply omit
 hmModules and use home-manager independently.
