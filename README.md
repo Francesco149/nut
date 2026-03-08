@@ -174,6 +174,21 @@ The home manager module and `hosts/${name}/hm/home.nix` are auto-imported for
 each host that has any `hmModules`, users whether they come from the global or
 per-host list.
 
+You should at least add `home.stateVersion` to this file:
+
+```nix
+# hosts/myhost/hm/home.nix
+{ pkgs, ... }:
+{
+  # ... you settings here
+
+  # the latest stable NixOS version you first installed Home Manager.
+  # you can check here at the time of install: https://status.nixos.org/
+  # do not change this afterwards
+  home.stateVersion = "25.11";
+}
+```
+
 A user and its home folder is also automatically created for each `hmModules`
 entry with sensible defaults. As with everything you can override these
 defaults, explained in the [dedicated section](#overriding-defaults) .
