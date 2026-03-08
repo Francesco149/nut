@@ -171,7 +171,7 @@ nut.lib.mf {
 ```
 
 The home manager module and `hosts/${name}/hm/home.nix` are auto-imported for
-each host that has any `hmModules`, whether they come from the global or
+each host that has any `hmModules`, users whether they come from the global or
 per-host list.
 
 A user and its home folder is also automatically created for each `hmModules`
