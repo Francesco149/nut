@@ -413,10 +413,17 @@ or edit it to match things like `stateVersion` .
 If you need to maintain ssh access to this machine after deployment, make sure
 to add your ssh key(s) to `nut.ssh.authorizedKeys` in `hosts/nixos/nixos.nix` .
 
-Deploy and reboot into your hyprland desktop:
+Deploy:
 
 ```sh
 nixos-rebuild switch --flake .#nixos
+```
+
+Make sure to change alice's password before you reboot, then reboot into your
+hyprland desktop. Log in as the demo user alice.
+
+```sh
+passwd alice
 reboot
 ```
 
