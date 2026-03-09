@@ -38,5 +38,10 @@
         path = ./templates/default;
         description = "minimal nix-utils NixOS config";
       };
+
+      flake.templates.hyprland = {
+        path = ./templates/hyprland;
+        description = "basic hyprland config";
+      };
     };
 }
