@@ -90,6 +90,12 @@ flake-parts.lib.mkFlake { inherit inputs; } {
               "flakes"
               "nix-command"
             ];
+
+            # on a fresh install, debus is enabled. if we disable it, we will run into
+            # timeouts trying to stop dbug upon deploying the flake.
+            # by enabling dbus we sidestep the issue and users will likely want it on
+            # on desktop anyway
+            services.dbus.enable = true;
           }
         ]
         ++ (mkDefaultModules name)
