@@ -440,8 +440,11 @@ reboot
 
 Poke around in `hosts/nixos/hm/home.nix`, try customizing and adding things.
 
-Edit `hosts/nixos/nixos.nix` to your liking, add whatever system-wide software and
-configuration you want that doesn't fit in home-manager.
+Check out `flake.nix` , try adding more users or renaming alice to your own
+user. Experiment with modularizing your configuration.
+
+Edit `hosts/nixos/nixos.nix` to your liking, add whatever system-wide software
+and configuration you want that doesn't fit in home-manager.
 
 If you want to rename your host, edit `flake.nix` and replace `nixos` with your
 machine name, then rename `./hosts/nixos` to a matching dir name.
