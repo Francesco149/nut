@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nut.url = "github:Francesco149/nix-utils";
+    nut.url = "github:Francesco149/nut";
     nut.inputs.nixpkgs.follows = "nixpkgs";
   };
 

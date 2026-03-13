@@ -1,4 +1,4 @@
-# nix-utils (nut)
+# nut (nix-utils)
 
 Opinionated but flexible NixOS flake library. Aims to de-clutter boilerplate
 without undermining the modular philosophy of the nix ecosystem.
@@ -22,7 +22,7 @@ The simplest possible setup, a single machine with no extras:
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nut.url = "github:Francesco149/nix-utils";
+    nut.url = "github:Francesco149/nut";
     nut.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -91,7 +91,7 @@ you want to override it.
 ```nix
 inputs = {
   nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  nut.url = "github:Francesco149/nix-utils";
+  nut.url = "github:Francesco149/nut";
   nut.inputs.nixpkgs.follows = "nixpkgs";
 
   deploy-rs.url = "github:serokell/deploy-rs";
@@ -248,7 +248,7 @@ hosts = {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nut.url = "github:Francesco149/nix-utils";
+    nut.url = "github:Francesco149/nut";
     nut.inputs.nixpkgs.follows = "nixpkgs";
 
     deploy-rs.url = "github:serokell/deploy-rs";
@@ -332,7 +332,7 @@ by getting rid of the default modules.
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nut.url = "github:Francesco149/nix-utils";
+    nut.url = "github:Francesco149/nut";
     nut.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -406,7 +406,7 @@ Feel free to submit your own templates.
 nix shell nixpkgs#git # if you don't have git
 mkdir flake && cd flake
 git init
-nix flake init -t github:Francesco149/nix-utils#hyprland
+nix flake init -t github:Francesco149/nut#hyprland
 git add .
 ```
 
@@ -531,7 +531,7 @@ If you have got this working, please open an issue or PR with your setup.
 
 ## acknowledgements
 
-nix-utils stands on the shoulders of an incredible ecosystem maintained by
+nut stands on the shoulders of an incredible ecosystem maintained by
 dedicated volunteers and developers. A huge thank you to:
 
 - **[NixOS](https://nixos.org/) and [nixpkgs](https://github.com/NixOS/nixpkgs)**

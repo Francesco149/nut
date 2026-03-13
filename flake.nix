@@ -36,7 +36,7 @@
 
       flake.templates.default = {
         path = ./templates/default;
-        description = "minimal nix-utils NixOS config";
+        description = "minimal nut NixOS config";
       };
 
       flake.templates.hyprland = {
