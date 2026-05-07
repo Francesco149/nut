@@ -193,7 +193,7 @@ You should at least add `home.stateVersion` to this file:
 
 ```nix
 # hosts/myhost/hm/home.nix
-{ pkgs, ... }:
+{ pkgs, osConfig, inputs, ... }:
 {
   # ... you settings here
 

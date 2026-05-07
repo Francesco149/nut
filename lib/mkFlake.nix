@@ -131,7 +131,15 @@ flake-parts.lib.mkFlake { inherit inputs; } {
           in
           lib.optionals (home-manager != null && mergedHmModules != { }) (
             # home manager modules
-            [ home-manager.nixosModules.home-manager ]
+            [
+              home-manager.nixosModules.home-manager
+              ({
+                # thread through inputs to HM modules
+                home-manager.extraSpecialArgs = {
+                  inherit inputs;
+                };
+              })
+            ]
             ++ lib.mapAttrsToList (
               user: imports: import ../modules/hm/home.nix { inherit user imports; }
             ) mergedWithDefaults
