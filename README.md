@@ -70,6 +70,19 @@ from `nut.ports.ssh` .
 Enables `experimental-features = flakes nix-command` . You basically never want
 to have these off if you're working with flakes.
 
+NixOS modules imported through `nut.lib.mf` receive the calling flake's `self`
+and `inputs` through `_module.args`, so host modules can take them as normal
+module arguments:
+
+```nix
+{ inputs, pkgs, ... }:
+{
+  environment.systemPackages = [
+    inputs.some-flake.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
+}
+```
+
 Deploy with:
 
 ```sh
