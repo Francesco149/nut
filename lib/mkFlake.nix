@@ -6,29 +6,110 @@
 let
   inherit (nixpkgs) lib;
 in
-{
-  self,
-  inputs,
-  dir,
-  hosts,
-  systems ? [ "x86_64-linux" ],
-  perSystem ? { ... }: { },
-  modules ? [ ],
-  hmModules ? { },
-  mkHomeDir ? user: if user == "root" then "/${user}" else "/home/${user}",
-  mkDefaultModules ? name: [
-    ../modules/ssh.nix
-    (dir + "/hosts/${name}/configuration.nix")
-    (dir + "/hosts/${name}/${name}.nix")
-  ],
-  mkDefaultHmModules ? name: [
-    (dir + "/hosts/${name}/hm/home.nix")
-  ],
-  flake ? { },
-  imports ? [ ],
-}:
+rawArgs:
 
 let
+  mergeHmModules = builtins.zipAttrsWith (_: lib.flatten);
+
+  normalizeHost =
+    host:
+    {
+      nut = { };
+    }
+    // (
+      if builtins.isList host then
+        { modules = host; }
+      else if builtins.isString host then
+        {
+          nut.deploy.host = host;
+          modules = [ ];
+        }
+      else if builtins.isAttrs host then
+        host
+      else
+        { modules = [ ]; }
+    );
+
+  mergeHost =
+    old: new:
+    let
+      old' = normalizeHost old;
+      new' = normalizeHost new;
+    in
+    lib.recursiveUpdate old' new'
+    // {
+      modules = (old'.modules or [ ]) ++ (new'.modules or [ ]);
+      hmModules = mergeHmModules [
+        (old'.hmModules or { })
+        (new'.hmModules or { })
+      ];
+    };
+
+  mergeHosts = lib.zipAttrsWith (_: hosts: builtins.foldl' mergeHost { } hosts);
+
+  groupHosts =
+    group:
+    let
+      groupModules = group.modules or [ ];
+      groupHmModules = group.hmModules or { };
+    in
+    builtins.mapAttrs (
+      _: host:
+      let
+        host' = normalizeHost host;
+      in
+      host'
+      // {
+        modules = groupModules ++ (host'.modules or [ ]);
+        hmModules = mergeHmModules [
+          groupHmModules
+          (host'.hmModules or { })
+        ];
+      }
+    ) (group.hosts or { });
+
+  mergeGroup =
+    acc: group:
+    (lib.recursiveUpdate acc (
+      removeAttrs group [
+        "hosts"
+        "modules"
+        "hmModules"
+      ]
+    ))
+    // {
+      hosts = mergeHosts [
+        (acc.hosts or { })
+        (groupHosts group)
+      ];
+      modules = [ ];
+      hmModules = { };
+    };
+
+  args = if builtins.isList rawArgs then builtins.foldl' mergeGroup { } rawArgs else rawArgs;
+
+  self = args.self;
+  inputs = args.inputs;
+  dir = args.dir;
+  hosts = args.hosts;
+  systems = args.systems or [ "x86_64-linux" ];
+  perSystem = args.perSystem or ({ ... }: { });
+  modules = args.modules or [ ];
+  hmModules = args.hmModules or { };
+  mkHomeDir = args.mkHomeDir or (user: if user == "root" then "/${user}" else "/home/${user}");
+  mkDefaultModules =
+    args.mkDefaultModules or (name: [
+      ../modules/ssh.nix
+      (dir + "/hosts/${name}/configuration.nix")
+      (dir + "/hosts/${name}/${name}.nix")
+    ]);
+  mkDefaultHmModules =
+    args.mkDefaultHmModules or (name: [
+      (dir + "/hosts/${name}/hm/home.nix")
+    ]);
+  flake = args.flake or { };
+  imports = args.imports or [ ];
+
   deploy-rs = inputs.deploy-rs or null;
   home-manager = inputs.home-manager or null;
 in
@@ -48,22 +129,7 @@ flake-parts.lib.mkFlake { inherit inputs; } {
     nixosConfigurations = builtins.mapAttrs (
       name: host:
       let
-        normalized = {
-          nut = { };
-        }
-        // (
-          if builtins.isList host then
-            { modules = host; }
-          else if builtins.isString host then
-            {
-              nut.deploy.host = host;
-              modules = [ ];
-            }
-          else if builtins.isAttrs host then
-            host
-          else
-            { modules = [ ]; }
-        );
+        normalized = normalizeHost host;
       in
       nixpkgs.lib.nixosSystem {
         system = normalized.system or "x86_64-linux";

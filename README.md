@@ -134,6 +134,37 @@ hosts = {
 };
 ```
 
+For larger flakes, `nut.lib.mf` also accepts a list of attrsets. In this form,
+`modules` and `hmModules` apply only to the hosts declared in the same block,
+which makes it easier to group machines by shared modules:
+
+```nix
+nut.lib.mf [
+  {
+    inherit self inputs;
+    dir = ./.;
+
+    modules = [
+      ./modules/local.nix
+      ./modules/tailscale-home-lan.nix
+    ];
+
+    hosts = {
+      code.modules = [ ./modules/interactive.nix ];
+      mail.modules = [ ];
+      cold.modules = [ ./modules/zfs.nix ];
+    };
+  }
+
+  {
+    hosts.relay = "198.51.100.10";
+  }
+]
+```
+
+If a host appears in multiple blocks, its modules are concatenated and its
+`hmModules` are merged by user.
+
 ---
 
 ## common modules
